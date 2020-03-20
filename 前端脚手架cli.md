@@ -83,7 +83,9 @@ nrm use npm //切换镜像
 
 ### 五、实现
 
-前面该说的都说了，接下来让我们动起来，手把手教你搭建脚手架。
+前面该说的都说了，接下来让我们动起来，手把手教你搭建脚手架。我们先通过图了解下脚手架的大致工作流程。
+
+![](./13.png)
 
 ####5.1 准备脚手架项目
 
@@ -472,7 +474,8 @@ let create = async (ProjectName) => {
                     answer.name = ProjectName;
                     updateJsonFile(fileName, answer)
                     .then(() => {
-                        console.log(symbol.success, chalk.green('Project package.json update finished!'));
+                        console.log(symbol.success, chalk.green('Project package.json
+                         update finished!'));
                     })
                 }, () => {
                     loading.fail('模板下载失败');
@@ -537,22 +540,24 @@ module.exports = init;
 
 ###5.7 项目启动
 
-所谓项目启动就是说可以让我们的项目本地运行。前端项目本地运行我们通常会借助前端自动化构建工具来实现，我们可以认为它是一个前端集成开发环境，能够合理、快速和高效的解决前端开发中的工程和项目问题，集成了本地调试、本地构建、远程部署、代码校验等一些列开发工具。其中最为突出的当属于用户模块化打包的webpack和用户任务流程构建的Gulp。接下来我们就是借助webpack来实现我们脚手架的本地启动。
+所谓项目启动就是说可以让我们的项目本地运行。前端项目本地运行我们通常会借助前端自动化构建工具来实现，我们可以认为它是一个前端集成开发环境，能够合理、快速和高效的解决前端开发中的工程和项目问题，集成了本地调试、本地构建、远程部署、代码校验等一些列开发工具。其中最为突出的当属于用户模块化打包的 webpack 和用户任务流程构建的 Gulp。接下来我们就是借助 webpack 来实现我们脚手架的本地启动。
 
-先来做下依赖分析【主要针对我自己搭的webpack4+vue+typescript项目】
+先来做下依赖分析【主要针对我自己搭的 webpack4+vue+typescript 项目】
 
-* 在webpack4中已经将webpack和它的cli分开了，所以需引入webpack 和 webpack-cli
-* 支持热更新，需引入webpack-dev-server
-* 当使用 webpack打包时，创建一个 html 文件，并把 webpack 打包后的静态文件自动插入到这个 html 文件当中，需引入html-webpack-plugin
-* 支持启动后自动打开浏览器，需引入open-browser-webpack-plugin
-* 支持vue解析，需引入vue-loader和vue-template-compiler
-* 支持style、css、less解析,需引入style-loader、css-loader和less-loader
-* 支持typescript， 需引入ts-loader
+* 在 webpack4 中已经将 webpack 和它的 cli 分开了，所以需引入 webpack 和 webpack-cli
+* 支持热更新，需引入 webpack-dev-server
+* 当使用 webpack 打包时，创建一个 html 文件，并把 webpack 打包后的静态文件自动插入到这个 html 文件当中，需引入 html-webpack-plugin
+* 支持启动后自动打开浏览器，需引入 open-browser-webpack-plugin
+* 支持 vue 解析，需引入 vue-loader 和 vue-template-compiler
+* 支持 style、css、less 解析,需引入 style-loader、css-loader 和 less-loader
+* 支持 typescript， 需引入 ts-loader
 
 * 在脚手架目录(little-bird-cli)下安装依赖
 
-```
-npm i webpack webpack-cli  webpack-dev-server html-webpack-plugin open-browser-webpack-plugin vue vue-loader vue-template-compiler style-loader css-loader less less-loader typescript ts-loader -S
+```plain
+npm i webpack webpack-cli  webpack-dev-server html-webpack-plugin
+ open-browser-webpack-plugin vue vue-loader vue-template-compiler style-loader 
+ css-loader less less-loader typescript ts-loader -S
 ```
 
 * 准备 webpack 配置文件
@@ -647,13 +652,13 @@ module.exports = dev;
 
 ![](./10.png)
 
-在npm[官网](https://www.npmjs.com)查看是否可以搜到
+在 npm[官网](https://www.npmjs.com)查看是否可以搜到
 
 ![](./11.png)
 
-完成！可以通过`npm i -g little-bird-cli`安装脚手架包，装之前最好先把之前开发时链到全局的命令删除掉，安装成功之后就可以使用了biubiubiubiu~
+完成！可以通过`npm i -g little-bird-cli`安装脚手架包，装之前最好先把之前开发时链到全局的命令删除掉，安装成功之后就可以使用了 biubiubiubiu~
 
-```
+```plain
 npm unlink little-bird-cli
 npm unlink lb-cli
 npm unlink lbc
@@ -664,4 +669,158 @@ npm i -g little-bird-cli
 
 ![](./12.png)
 
-### 从零开始搭建项目
+### 六、拓展
+
+除了实现模板创建和本地启动的功能，还可以在此基础上进一步拓展，比如版本校验、脚手架更新、webpack 自定义、代码校验、自动化测试等，这些都可以作为开发者的辅助工具，提高开发效率。本文只是带大家入门，感兴趣的同学可以继续深入尝试。
+
+### 七、从零开始搭建项目
+
+这里介绍一下 WebPack 4 +TypeScript 3 +Vue +less 简单环境搭建
+
+####7.1 项目初始化
+```plain
+mkdir vue-template && cd vue-template
+mkdir public
+mkdir src && cd  src
+mkdir components 
+mkdir assets
+cd ../
+npm init
+git init
+```
+
+####7.2 依赖安装
+
+* Typescript 的相关安装
+```plain
+npm i typescript ts-loader --save-dev
+```
+
+* webpack 的相关安装
+```plain
+npm i webpack webpack-cli --save-dev
+```
+
+* vue 的相关安装
+```plain
+npm i vue vue-loader vue-template-compiler --save-dev
+```
+
+* css 相关安装
+```plain
+npm i css-loader style-loader less less-loader -save-dev
+```
+
+* 其他插件安装
+```plain
+npm i html-webpack-plugin webpack-dev-server --save-dev 
+```
+
+####7.3 配置文件
+* 项目根目录创建 tsconfig.json（开始用不上，但是该文件创建后无需要变动）
+* 项目根目录创建 webpack.config.json
+```plain
+const path = require('path');
+const VueLoaderPlugin = require('vue-loader/lib/plugin'); //引入vue-loader库
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    entry: './src/index.ts', // 入口文件
+    devtool: 'cheap-module-eval-source-map', //不包含列信息，同时 loader 的 sourcemap 也被简化为只包含对应行的
+    module: {
+        rules: [{
+            test: /\.vue$/,
+            use: 'vue-loader'
+        }, //vue加载器
+        {
+            test: /\.tsx?$/,
+            loader: 'ts-loader', //ts加载器
+            options: {
+                transpileOnly: true,
+                appendTsSuffixTo: [/.vue$/]
+            }  //认识vue文件
+
+        }, {
+            test: /\.(css|less)$/,
+            loader: 'vue-style-loader!less-loader!css-loader'
+        } //css加载器
+        ]
+    },
+    plugins: [new VueLoaderPlugin()  //vue-loader插件加载方式
+        ,new HtmlWebpackPlugin({ //此部分新增加
+            template: './public/index.html',//需要自动注入的模板的文件名称
+            inject: true//是否自动注入生成后的文件
+        })
+    ],
+    devtool: '#eval-source-map'
+}
+
+```
+
+* 修改配置文件 package.json
+```plain
+"scripts": {
+    "dev":"webpack-dev-server --open --mode development"
+}
+```
+
+####7.4 新建文件
+* public 目录新建主入口文件 index.html
+```plain
+ <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>vue-template</title>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>
+```
+* src 目录新建 vue 模板文件 App.vue
+```plain
+<template>
+    <div>
+        {{msg}}
+    </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+    data() {
+        return {
+            msg: 'hello world'
+        }
+    },
+})
+</script>
+```
+
+* src 目录下新建 vue 入口文件 index.ts
+```plain
+import Vue from 'vue'
+import App from './App.vue';
+
+new Vue(
+    {
+        el:'#app',
+        render:h=>h(App)
+    }
+)
+```
+
+####7.5 启动项目
+
+```plain
+npm run dev
+```
+
+####7.6 精简
+
+一个简单 WebPack 4 +TypeScript 3 +Vue +less 项目已经搭完了，作为脚手架的项目模板，有些功能我们会直接继承到脚手架里，所以还会对上面搭建的项目模板做些精简工作。比如项目启动会继承到脚手架里，那么该项目里的相关内容则可去掉
+* 去掉 package.json 的 dev 命令
+* 清空 webpack.config.js
+* 删除依赖：html-webpack-plugin webpack-dev-server
