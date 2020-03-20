@@ -222,7 +222,7 @@ import chalk from 'chalk';
 
 import create from './create'; // 项目创建
 import init from './init'; // 项目初始化
-import dev from './create'; // 项目启动
+import dev from './dev'; // 项目启动
 
 /**
  * little-bird-cli 命令列表
@@ -296,7 +296,7 @@ Object.keys(actionMap).forEach(action => {
                     break;
                 case 'dev':
                     console.log(symbol.info, chalk.yellow(`项目启动，端口号为${program.port}`));
-                    // dev(...process.argv.slice(3));
+                    // dev(program.port);
                     break;
                 default:
                     break;
@@ -537,19 +537,30 @@ module.exports = init;
 
 ###5.7 项目启动
 
+所谓项目启动就是说可以让我们的项目本地运行。前端项目本地运行我们通常会借助前端自动化构建工具来实现，我们可以认为它是一个前端集成开发环境，能够合理、快速和高效的解决前端开发中的工程和项目问题，集成了本地调试、本地构建、远程部署、代码校验等一些列开发工具。其中最为突出的当属于用户模块化打包的webpack和用户任务流程构建的Gulp。接下来我们就是借助webpack来实现我们脚手架的本地启动。
 
-###9. 项目启动
-在写项目启动命令之前，我们要先思考下前端项目是怎么本地运行的，需要什么条件。说到前端项目本地运行，就不得不提前端自动化构建工具，我们可以认为它是一个前端集成开发环境，能够合理、快速和高效的解决前端开发中的工程和项目问题，集成了本地调试、本地构建、远程布署、代码生成等一系列开发命令工具。其中最为突出的，当属用于模块化打包的 webpack 和用于任务流构建的 Gulp。本文我们就借助 webpack 来实现项目的本地调试。
+先来做下依赖分析【主要针对我自己搭的webpack4+vue+typescript项目】
 
-* 安装 webpack 依赖
-```plain
-npm i webpack webpack-dev-server html-webpack-plugin vue-loader css-loader less-loader open-browser-webpack-plugin --save-dev
+* 在webpack4中已经将webpack和它的cli分开了，所以需引入webpack 和 webpack-cli
+* 支持热更新，需引入webpack-dev-server
+* 当使用 webpack打包时，创建一个 html 文件，并把 webpack 打包后的静态文件自动插入到这个 html 文件当中，需引入html-webpack-plugin
+* 支持启动后自动打开浏览器，需引入open-browser-webpack-plugin
+* 支持vue解析，需引入vue-loader和vue-template-compiler
+* 支持style、css、less解析,需引入style-loader、css-loader和less-loader
+* 支持typescript， 需引入ts-loader
+
+* 在脚手架目录(little-bird-cli)下安装依赖
+
+```
+npm i webpack webpack-cli  webpack-dev-server html-webpack-plugin open-browser-webpack-plugin vue vue-loader vue-template-compiler style-loader css-loader less less-loader typescript ts-loader -S
 ```
 
-* 准备一个 webpack 配置文件。
->webpack.config.js
+* 准备 webpack 配置文件
+
+>src/webpack.config.js
 
 ```plain
+
 
 const VueLoaderPlugin = require('vue-loader/lib/plugin'); //引入vue-loader库
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -597,13 +608,11 @@ module.exports = {
     ],
     devtool: '#eval-source-map'
 }
-
 ```
 
-* 写 webpack 启动命令
+* 写启动命令
 
-    - 支持热更新
-    - 启动后自动打开浏览器
+>src/dev.js
 
 ```plain
 import webpack from "webpack";
@@ -629,34 +638,30 @@ let dev = (port) => {
 module.exports = dev;
 ```
 
-### 使用脚手架
-* 先要有一个 npm 账号，，如果没有请到 https://www.npmjs.com 注册
-* 发布脚手架
-```plain
-npm login // 根据提示依次输入用户名、密码，登录成功后会显示用户名。
+项目启动命令完成，我们可以去刚才创建的项目里试一下了
+![](./9.png)
 
-npm publish
+### 5.8 发布&使用
+
+当当当...小伙伴们迫不及待看成品了吧，再等一下，让我们先发布
+
+![](./10.png)
+
+在npm[官网](https://www.npmjs.com)查看是否可以搜到
+
+![](./11.png)
+
+完成！可以通过`npm i -g little-bird-cli`安装脚手架包，装之前最好先把之前开发时链到全局的命令删除掉，安装成功之后就可以使用了biubiubiubiu~
+
+```
+npm unlink little-bird-cli
+npm unlink lb-cli
+npm unlink lbc
+npm i -g little-bird-cli
 ```
 
-如果是因为使用了镜像导致 publish 不成功，可以按如下步骤操作：
-```plain
-npm i -g nrm
+执行`lbc dev -p 8001`浏览器会自动打开访问本地项目
 
-nrm use npm
-
-npm publish
-```
-
-朋友们在给自己的脚手架起名字的时候，最好先去 npm 平台查下吉凶，毕竟大前端人才济济，还是很容易出现重名的。
-
-发布成功之后就可以在 npm 平台查到自己的 npm 包了。
-
-![](./little-bird-cli.png)
-
-通过`npm i -g little-bird-cli`安装脚手架包，装之前最好先把之前开发时链到全局的命令删除掉`npm unlink free-cli`。
-
-
-
-问题记录: 本地 npm link 正常, 发布之后报错 Cannot find module 'vue-template-compiler', 去命令根目录手动安装了下才好的
+![](./12.png)
 
 ### 从零开始搭建项目
